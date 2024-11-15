@@ -21,7 +21,7 @@ const superAdminSchema = new mongoose.Schema({
     type: String,
     required: [true, 'Mobile number is required'],
     unique: true,
-    match: [/^\d{10}$/, 'Mobile number must be 10 digits long'],
+    // match: [/^\d{10}$/, 'Mobile number must be 10 digits long'],
   },
  
   signUpDate: {

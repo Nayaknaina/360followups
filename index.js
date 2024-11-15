@@ -1,14 +1,24 @@
 require("dotenv").config();
-
+require('./config/conn')
 const express = require("express");
 
 const session = require("express-session");
 const cookieParser = require("cookie-parser");
+const cors = require("cors");
+const morgan = require("morgan");
 const passport = require("passport");
 
 const app = express();
 const path = require("path");
 const port = process.env.PORT || 8000;
+
+// todo routes
+const superRouter = require('./routes/superAdmin/supder.route.js')
+const indexRouter = require('./routes/index.route.js')
+const adminRouter = require('./routes/admin/admin.route.js')
+
+
+
 // todo Middleware setup
 app.use(cors()); 
 app.use(morgan('dev')); 
@@ -16,13 +26,14 @@ app.use(cookieParser());
 app.use(express.json()); 
 app.use(express.urlencoded({ extended: true }));
 
+
 // Static files
 app.use(express.static(path.join(__dirname, 'public')));
 
 // Session management
 app.use(
   session({
-    secret: process.env.SESSION_SECRET || 'your_secret_key',
+    secret: process.env.SESSION_SECRET ,
     resave: false,
     saveUninitialized: true,
     cookie: { secure: false }, // secure: true for HTTPS
@@ -37,15 +48,38 @@ app.use(passport.session());
 app.set('view engine', 'hbs');
 app.set('views', path.join(__dirname, 'views'));
 
-// Routes
-app.use('/auth', authRoutes); // Prefix all auth routes with '/auth'
+// todo Routes
 
-// Default route
-app.get('/', (req, res) => {
-  res.render('index', { title: 'Home' });
+
+app.use(express.static(path.join(__dirname, 'public')));
+
+// todo Set views directory for indexRouter
+app.use('/', (req, res, next) => {
+  app.set('views', path.join(__dirname, 'views'));
+  indexRouter(req, res, next);
+});
+
+//todo Set views directory for superRouter
+app.use('/wsv/super', (req, res, next) => {
+  app.set('views', path.resolve(__dirname, 'views', "superAdmin"));
+  superRouter(req, res, next);
 });
 
 
+//todo Set views directory for adminRouter
+app.use('/admin', (req, res, next) => {
+  app.set('views', path.join(__dirname, 'views', 'admin'));
+  adminRouter(req, res, next);
+});
+
+//todo Reset the views directory to the default for other routes
+app.use((req, res, next) => {
+  app.set('views', path.join(__dirname, 'views'));
+  next();
+});
+
+
+const static_path = path.join(__dirname, 'public')
 app.get("/:page", (req, res) => {
   const page = req.params.page;
   const filePath = path.join(static_path, `${page}.html`);
