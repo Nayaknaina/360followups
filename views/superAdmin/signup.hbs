@@ -12,54 +12,159 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <title>Sign up | Bootstrap Simple Admin Template</title>
-    <link href="assets/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
-    <link href="assets/css/auth.css" rel="stylesheet">
-</head>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/11.0.4/css/intlTelInput.css">
+    <link href="/assets/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/css/toastr.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+<script src="https://cdn.tailwindcss.com"></script>
 
+    <link href="/assets/css/auth.css" rel="stylesheet">
+    <link href="/assets/css/loader/loader.css" rel="stylesheet">
+</head>
+<style>
+    .intl-tel-input {
+    position: relative;
+    display: block;
+}
+</style>
 <body>
+
+    
+ <div id="loader">
+        <section id="finSec"><span class="loader-11"> </span></section>
+    </div>
     <div class="wrapper">
         <div class="auth-content">
             <div class="card">
                 <div class="card-body text-center">
-                    <div class="mb-4">
+                    {{!-- <div class="mb-4">
                         <img class="brand" src="assets/img/bootstraper-logo.png" alt="bootstraper logo">
-                    </div>
+                    </div> --}}
                     <h6 class="mb-4 text-muted">Create new account</h6>
-                    <form action="" method="">
+                    <form id="super-admin-registration-form">
                         <div class="mb-3 text-start">
                             <label for="name" class="form-label">Name</label>
-                            <input type="text" class="form-control" placeholder="Enter Name" required>
+                            <input type="text" name="name" id="name" class="form-control" placeholder="Enter Name" required>
                         </div>
+                       
                         <div class="mb-3 text-start">
-                            <label for="email" class="form-label">Email adress</label>
-                            <input type="email" class="form-control" placeholder="Enter Email" required>
+                            {{!-- <label for="mobile" class="form-label">Mobile number</label> --}}
+                            <input id="mobile"  name="mobileNumber" type="tel" class="form-control " maxlength="10" minlength="10"  placeholder="Enter Mobile" required>
+                        </div>
+
+                        <div class="mb-3 text-start">
+                            <label for="email" class="form-label">Email address</label>
+                            <input id="email"  name="email" type="email" class="form-control" placeholder="Enter Email" required>
                         </div>
                         <div class="mb-3 text-start">
                             <label for="password" class="form-label">Password</label>
-                            <input type="password" class="form-control" placeholder="Password" required>
+                            <input id="password" name="password" type="password" class="form-control" 
+                            minlength="6"
+                            placeholder="Password" required>
                         </div>
-                        <!-- 
+                       
                         <div class="mb-3">
-                            <input type="password" class="form-control" placeholder="Confirm password" required>
+                            <input type="password" id="cpass" name="confirmPassword"
+                            minlength="6" class="form-control" placeholder="Confirm password" required>
                         </div> 
-                        -->
-                        <div class="mb-3 text-start">
+
+                        {{!-- <div class="mb-3 text-start">
                             <div class="form-check">
                               <input class="form-check-input" name="confirm" type="checkbox" value="" id="check1">
                               <label class="form-check-label" for="check1">
                                 I agree to the <a href="#" tabindex="-1">terms and policy</a>.
                               </label>
                             </div>
+                        </div> --}}
+                        <div class="container">
+                        <button class="btn btn-success shadow-2" type="button" id="verify-email-button">Verify</button>
+                        <button class="btn btn-primary shadow-2"  id="register-btn" disabled>login</button>
                         </div>
-                        <button class="btn btn-primary shadow-2 mb-4">Register</button>
                     </form>
-                    <p class="mb-0 text-muted">Allready have an account? <a href="login.html">Log in</a></p>
+                    <p class="mb-0 text-muted">Allready have an account? <a href="/wsv/super/login">Login</a></p>
                 </div>
             </div>
         </div>
     </div>
-    <script src="assets/vendor/jquery/jquery.min.js"></script>
-    <script src="assets/vendor/bootstrap/js/bootstrap.min.js"></script>
+
+    
+  <div id="otpFillFormBox" style="background-color: #5d5d5d85; display: none;"
+    class=" absolute w-screen h-screen top-0 left-0 z-50">
+
+    
+    <div style="transform: translate(-50%, -50%); box-shadow: 1px 1px 20px rgb(80, 80, 80); "
+      class="bg-white shadow-lg absolute top-2/4 left-2/4 rounded-lg px-4 py-8 max-w-xs md:max-w-md w-full">
+
+      <i id="closeOTPbox" class="fa-solid fa-xmark" style="position: absolute; top: 1.3rem; right: 1.3rem; font-size: 1.6rem; cursor: pointer; font-weight: 700;"></i>
+      <h2 class="text-xl md:text-2xl font-bold text-center text-gray-800 mb-6">Verify Your OTP</h2>
+      <p class="text-center text-gray-600 mb-4">Enter the 6-digit OTP sent to your email.</p>
+      <form id="otpForm">
+        <div class="flex space-x-2 justify-center mb-6">
+          <input type="text" maxlength="1"
+            class="otp-input w-10 h-10 md:w-12 md:h-12 border border-gray-300 rounded-lg text-center text-lg font-semibold focus:outline-none focus:ring-2 focus:ring-purple-500" />
+          <input type="text" maxlength="1"
+            class="otp-input w-10 h-10 md:w-12 md:h-12 border border-gray-300 rounded-lg text-center text-lg font-semibold focus:outline-none focus:ring-2 focus:ring-purple-500" />
+          <input type="text" maxlength="1"
+            class="otp-input w-10 h-10 md:w-12 md:h-12 border border-gray-300 rounded-lg text-center text-lg font-semibold focus:outline-none focus:ring-2 focus:ring-purple-500" />
+          <input type="text" maxlength="1"
+            class="otp-input w-10 h-10 md:w-12 md:h-12 border border-gray-300 rounded-lg text-center text-lg font-semibold focus:outline-none focus:ring-2 focus:ring-purple-500" />
+          <input type="text" maxlength="1"
+            class="otp-input w-10 h-10 md:w-12 md:h-12 border border-gray-300 rounded-lg text-center text-lg font-semibold focus:outline-none focus:ring-2 focus:ring-purple-500" />
+          <input type="text" maxlength="1"
+            class="otp-input w-10 h-10 md:w-12 md:h-12 border border-gray-300 rounded-lg text-center text-lg font-semibold focus:outline-none focus:ring-2 focus:ring-purple-500" />
+        </div>
+        <button type="button" id="SubmitOTPbtn"
+          class="w-full bg-purple-500 text-white py-2 md:py-3 rounded-lg font-semibold hover:bg-purple-600 transition duration-200">Verify
+          OTP</button>
+      </form>
+      <p class="text-center text-gray-600 mt-6">
+        Didn’t receive the code? <a href="#" class="text-purple-500 hover:underline">Resend OTP</a>
+      </p>
+    </div>
+  </div>
+
+    <script src="/assets/vendor/jquery/jquery.min.js"></script>
+    <script src="/assets/vendor/bootstrap/js/bootstrap.min.js"></script>
+
+   <script src="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/11.0.4/js/intlTelInput.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/intl-tel-input@17.0.13/build/js/utils.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script>
+
+
+    <script src="/assets/js/superAdmin/registration.js"></script>
+    <script src="/assets/js/loader/loader.js"></script>
+  <script>
+    $(document).ready(function () {
+      $("#mobile").intlTelInput({
+        initialCountry: "in",
+        separateDialCode: true,
+        utilsScript: "https://cdn.jsdelivr.net/npm/intl-tel-input@17.0.13/build/js/utils.js"
+      });
+    });
+  </script>
+
+   <script>
+    // Sabhi OTP input fields ko select kar rahe hain
+    const otpInputs = document.querySelectorAll('.otp-input');
+
+    // Sabhi input fields par ek event listener laga rahe hain
+    otpInputs.forEach((input, index) => {
+      input.addEventListener('input', (e) => {
+        // Agr user ne koi value enter ki hai to agle input pe focus ho jaye
+        if (input.value.length === 1 && index < otpInputs.length - 1) {
+          otpInputs[index + 1].focus();
+        }
+      });
+
+      // Agr user backspace press karta hai to pichle input pe wapas jaye
+      input.addEventListener('keydown', (e) => {
+        if (e.key === 'Backspace' && input.value === '' && index > 0) {
+          otpInputs[index - 1].focus();
+        }
+      });
+    });
+  </script>
+  
 </body>
 
 </html>
